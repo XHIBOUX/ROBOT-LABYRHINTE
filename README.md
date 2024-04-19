@@ -3,7 +3,7 @@
 <img src="logo1.jpg" alt="license" width="500" height="333">
 # ROBOT-LABYRHINTE
 
-Ce projet est réalisé dans le cadre de l'UE Communication Sans Fil au cours de la première année de licence à l'Université de Valrose à Nice.
+<p> Ce projet est réalisé dans le cadre de l'UE Communication Sans Fil au cours de la première année de licence à l'Université de Valrose à Nice </p>
 
 <h1> L1 license
   
