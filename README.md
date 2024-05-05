@@ -18,6 +18,13 @@
                 <li>Carte Arduino</li>
             </ul>
         </section>
+         <section>
+            <h2>Datasheet</h2>
+            <ul>
+                <li> <a href="https://docs.rs-online.com/f172/A700000007238458.pdf"> Capteur Ultrason</a></li>
+                <li> <a href="https://wiki.dfrobot.com/Cherokey_4WD_Mobile_Platform__SKU_ROB0102_"> Robot Cherokee</a></li>
+            </ul>
+        </section>
     </main>
     <footer>
         <p>&copy; 2024 Projet dans le cadre de l'UE Communication Sans Fil, Université de Valrose, Nice</p>
