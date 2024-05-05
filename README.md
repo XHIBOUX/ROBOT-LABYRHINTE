@@ -18,6 +18,14 @@
                 <li>Carte Arduino</li>
             </ul>
         </section>
+        <section>
+            <h2>Démonstration</h2>
+            <ul>
+         <video width="640" height="360" controls>
+        <source src="chemin/vers/votre/video.mp4" type="video/mp4">
+    </video>
+            </ul>
+        </section>
          <section>
             <h2>Datasheet</h2>
             <ul>
