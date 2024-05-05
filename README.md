@@ -2,7 +2,7 @@
     <header>
         <h1>Robot Labyrinthe</h1>   
          <section>
-            <img src="chemin/vers/votre/image.jpg" alt="Image du Projet">
+            <img src="https://github.com/XHIBOUX/ROBOT-LABYRHINTE/blob/main/Image/Robot.png?raw=true" alt="Image du Projet">
         </section>
     </header>
     <main>
