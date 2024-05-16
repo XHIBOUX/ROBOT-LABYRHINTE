@@ -1,0 +1,35 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Simulation d'un labyrinthe en 3D (représentation simplifiée)
+maze_3d = np.random.randint(2, size=(10, 10, 10))  # Exemple d'un labyrinthe 3D de taille 10x10x10
+
+# Position initiale du robot
+robot_position = (0, 0, 0)
+
+# Fonction pour déterminer les mouvements possibles du robot
+def possible_moves(position):
+    x, y, z = position
+    moves = []
+    if x > 0 and maze_3d[x-1, y, z] == 0:
+        moves.append((x-1, y, z))
+    if x < maze_3d.shape[0] - 1 and maze_3d[x+1, y, z] == 0:
+        moves.append((x+1, y, z))
+    # Ajoutez des conditions similaires pour les mouvements dans les autres directions (y, z)
+    return moves
+
+# Algorithme de navigation du robot dans le labyrinthe
+def navigate_maze():
+    global robot_position
+    while robot_position != (maze_3d.shape[0]-1, maze_3d.shape[1]-1, maze_3d.shape[2]-1):
+        possible_moves_list = possible_moves(robot_position)
+        if len(possible_moves_list) > 0:
+            next_position = possible_moves_list[0]  # Choisit le premier mouvement possible pour simplifier
+            robot_position = next_position
+            print("Robot moved to position:", robot_position)
+        else:
+            print("No possible moves, robot is stuck!")
+            break
+
+# Appel de la fonction de navigation
+navigate_maze()
