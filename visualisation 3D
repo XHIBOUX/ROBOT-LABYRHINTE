@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Robot Cherokee Labyrinth Escape</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+    let scene, camera, renderer, robot, walls = [];
+    let maze = [
+        [1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 1, 0, 1],
+        [1, 0, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1]
+    ];
+    
+    init();
+    animate();
+
+    function init() {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Create the maze
+        let wallGeometry = new THREE.BoxGeometry(1, 1, 1);
+        let wallMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        for (let i = 0; i < maze.length; i++) {
+            for (let j = 0; j < maze[i].length; j++) {
+                if (maze[i][j] === 1) {
+                    let wall = new THREE.Mesh(wallGeometry, wallMaterial);
+                    wall.position.set(i, 0.5, j);
+                    scene.add(wall);
+                    walls.push(wall);
+                }
+            }
+        }
+
+        // Create the robot
+        let robotGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.6, 32);
+        let robotMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
+        robot = new THREE.Mesh(robotGeometry, robotMaterial);
+        robot.position.set(1, 0.3, 1);
+        scene.add(robot);
+
+        camera.position.z = 5;
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+
+        // Move the robot
+        if (robot.position.z < 4) {
+            robot.position.z += 0.01;
+        } else if (robot.position.x < 4) {
+            robot.position.x += 0.01;
+        }
+
+        renderer.render(scene, camera);
+    }
+</script>
+</body>
+</html>
