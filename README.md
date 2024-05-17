@@ -23,7 +23,6 @@
             <ul>
                 <video width="640" height="360" controls>
                 <source src="Image/robot.mp4" type="Image">
-                    Votre navigateur ne supporte pas la balise vidéo.
                 </video>
             </ul>
         </section>
