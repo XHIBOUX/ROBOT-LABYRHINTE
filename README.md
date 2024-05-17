@@ -22,7 +22,7 @@
             <h2>Démonstration</h2>
             <ul>
                 <video width="640" height="360" controls>
-                <source src="Image/robot.mp4" type="Image/mp4">
+                <source src="Image/robot.mp4" type="video/mp4">
                 </video>
                 <p>Cette vidéo montre une simulation 3D d'un robot Cherokee naviguant dans un labyrinthe.</p>
             </ul>
