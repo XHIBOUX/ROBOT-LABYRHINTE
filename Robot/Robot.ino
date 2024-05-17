@@ -37,7 +37,7 @@ void setup() {
   Serial.begin(9600);
 }
 
-void loop() {
+long readUltrasonicDistance() {
   // Mesurer la distance avec le capteur ultrason
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -45,24 +45,58 @@ void loop() {
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
   duration = pulseIn(echoPin, HIGH);
-  distance = duration * 0.034 / 2;
+  return duration * 0.034 / 2;
+}
 
+void loop() {
+
+  // Lire la distance en face
+  myServo.write(90);
+  delay(500);
+  distance = readUltrasonicDistance();
+  
   // Vérifier la distance mesurée et ajuster les mouvements du robot en conséquence
   if (distance > 20) { // Si la distance est supérieure à 20 cm, avancer
     carAdvance(100, 100);
-  } else { // Sinon, tourner à gauche
-    carTurnLeft(100, 100);
+  } else { // Sinon, stop 
+    carStop();
     delay(500); // Attendre un court instant pour tourner
+
+    // Lire la distance à gauche
+    myServo.write(0);
+    delay(500);
+    int distanceLeft = readUltrasonicDistance();
+
+     // Lire la distance à droite
+    myServo.write(180);
+    delay(500);
+    int distanceRight = readUltrasonicDistance();
+
+    // Ramener le servo en position centrale
+    myServo.write(90);
+    delay(500);
+
+    if (distanceLeft > 20) {
+      carTurnLeft(100, 100);
+      delay(500); // Attendre un court instant pour tourner
+    } else if (distanceRight > 20) {
+      carTurnRight(100, 100);
+      delay(500); // Attendre un court instant pour tourner
+    } else {
+      // Si aucune direction n'est libre, faire demi-tour
+      carTurnRight(100, 100);
+      delay(1000); // Attendre plus longtemps pour faire un demi-tour
+    }
   }
+  delay(100);
 }
 
 void carStop() {
   // Arrêter les moteurs
-  digitalWrite(speedPin_M2, 0);
-  digitalWrite(directionPin_M1, LOW);
-  digitalWrite(speedPin_M1, 0);
-  digitalWrite(directionPin_M2, LOW);
+  analogWrite(speedPin_M1, 0);
+  analogWrite(speedPin_M2, 0);
 }
+
 
 void carBack(int leftSpeed, int rightSpeed) {
   // Reculer
