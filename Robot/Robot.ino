@@ -32,6 +32,9 @@ void setup() {
 
   // Initialisation de la broche du servo moteur
   myServo.attach(servoPin);
+  myServo.write(90);
+
+  Serial.begin(9600);
 }
 
 void loop() {
