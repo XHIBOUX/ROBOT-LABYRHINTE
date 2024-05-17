@@ -21,9 +21,8 @@
         <section>
             <h2>Démonstration</h2>
             <ul>
-         <video width="640" height="360" controls>
-        <source src="chemin/vers/votre/video.mp4" type="video/mp4">
-    </video>
+                <video src="https://assets.codepen.io/6093409/hubspot-video-example.mp4" controls width="300">
+                </video>
             </ul>
         </section>
          <section>
