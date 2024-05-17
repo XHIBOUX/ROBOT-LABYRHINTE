@@ -15,7 +15,9 @@ const int servoPin = 11; // Broche de contrôle du servo moteur
 
 // Variables pour la distance mesurée par le capteur ultrason
 long duration;
-int distance;
+
+// Initialisation de la varaiable distance à zéro
+int distance=0;
 
 Servo myServo; // Déclaration de l'objet servo moteur
 
