@@ -22,7 +22,7 @@
             <h2>Démonstration</h2>
             <ul>
                 <video width="640" height="360" controls>
-                <source src="Image/robot.mp4" type="Image/robot.mp4">
+                <source src="Image/robot.mp4" type="vidéo/mp4">
                 </video>
             </ul>
         </section>
