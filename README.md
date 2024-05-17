@@ -21,7 +21,9 @@
         <section>
             <h2>Démonstration</h2>
             <ul>
-                <video src="https://assets.codepen.io/6093409/hubspot-video-example.mp4" controls width="300">
+                <video width="640" height="360" controls>
+                <source src="video/robot_labyrinth.mp4" type="video/mp4">
+                    Votre navigateur ne supporte pas la balise vidéo.
                 </video>
             </ul>
         </section>
