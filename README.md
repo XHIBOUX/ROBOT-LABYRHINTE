@@ -22,7 +22,7 @@
             <h2>Démonstration</h2>
             <ul>
                 <video width="640" height="360" controls>
-                <source src="video/robot_labyrinth.mp4" type="video/mp4">
+                <source src="image/robot.mp4" type="image/mp4">
                     Votre navigateur ne supporte pas la balise vidéo.
                 </video>
             </ul>
