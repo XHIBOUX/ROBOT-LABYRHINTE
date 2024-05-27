@@ -13,7 +13,7 @@
         <section>
             <h2>Matériel Utilisé</h2>
             <ul>
-                <li>Capteur ultrason</li>
+                <li>Capteur Ultrason</li>
                 <li>Robot Cherokee</li>
                 <li>Carte Arduino</li>
             </ul>
