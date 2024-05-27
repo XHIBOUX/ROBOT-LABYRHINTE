@@ -1,1 +1,59 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from mpl_toolkits.mplot3d import Axes3D
+
+# Configuration du labyrinthe (1 = chemin, 0 = mur)
+labyrinthe = np.array([
+    [1, 0, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 1, 0, 1],
+    [1, 1, 1, 0, 1, 0, 1],
+    [0, 0, 1, 0, 1, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1]
+])
+
+# Chemin du robot (indices des cellules du chemin)
+chemin_robot = [
+    (0, 0), (1, 0), (2, 0), (2, 1), (2, 2), (3, 2), 
+    (4, 2), (4, 3), (4, 4), (4, 5), (4, 6)
+]
+
+# Initialisation de la figure
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Création de la grille du labyrinthe
+x, y = np.meshgrid(np.arange(labyrinthe.shape[1]), np.arange(labyrinthe.shape[0]))
+
+# Fonction d'initialisation de l'animation
+def init():
+    ax.clear()
+    ax.set_xlim(0, labyrinthe.shape[1])
+    ax.set_ylim(0, labyrinthe.shape[0])
+    ax.set_zlim(0, 1)
+    ax.set_xticks(np.arange(0, labyrinthe.shape[1], 1))
+    ax.set_yticks(np.arange(0, labyrinthe.shape[0], 1))
+    ax.set_zticks([])
+    ax.grid(True)
+
+    # Dessiner les murs du labyrinthe
+    for i in range(labyrinthe.shape[0]):
+        for j in range(labyrinthe.shape[1]):
+            if labyrinthe[i, j] == 0:
+                ax.bar3d(j, i, 0, 1, 1, 1, color='gray')
+    return []
+
+# Fonction pour mettre à jour l'animation
+def update(num):
+    init()
+    # Position du robot
+    x_robot, y_robot = chemin_robot[num]
+    ax.scatter(x_robot + 0.5, y_robot + 0.5, 0.5, color='red', s=100)
+    return []
+
+# Création de l'animation
+ani = animation.FuncAnimation(fig, update, frames=len(chemin_robot), init_func=init, blit=True, repeat=False)
+
+# Affichage de l'animation
+plt.show()
 
