@@ -1,107 +1,97 @@
-#include <Servo.h> // Inclure la bibliothèque du servo moteur
+#include <Servo.h>
 
-// Déclaration des broches de contrôle des moteurs
-int speedPin_M1 = 5;     // Contrôle de vitesse M1
-int speedPin_M2 = 6;     // Contrôle de vitesse M2
-int directionPin_M1 = 4; // Contrôle de direction M1
-int directionPin_M2 = 7; // Contrôle de direction M2
+Servo myservo;
 
-// Broches du capteur ultrason
-const int trigPin = 9;  // Broche de déclenchement du capteur ultrason
-const int echoPin = 10; // Broche de réception du capteur ultrason
+int pos = 0;
+int URPWM = 3;
+int URTRIG = 5;
+boolean up = true;
+unsigned long time;
+unsigned long urmTimer = 0;
 
-// Broche du servo moteur
-const int servoPin = 11; // Broche de contrôle du servo moteur
+unsigned int Distance = 0;
+uint8_t EnPwmCmd[4] = {0x44,0x22,0xbb,0x01};
 
-// Variables pour la distance mesurée par le capteur ultrason
-long duration;
-
-// Initialisation de la varaiable distance à zéro
-int distance=0;
-
-Servo myServo; // Déclaration de l'objet servo moteur
+int speedPin_M1 = 5;     //M1 Speed Control
+int speedPin_M2 = 6;     //M2 Speed Control
+int directionPin_M1 = 4; //M1 Direction Control
+int directionPin_M2 = 7; //M2 Direction Control
 
 void setup() {
-  // Initialisation des broches de contrôle des moteurs en tant que sorties
+  Serial.begin(9600);
+  myservo.attach(9);
+  PWM_Mode_Setup();
+  
   pinMode(speedPin_M1, OUTPUT);
   pinMode(speedPin_M2, OUTPUT);
   pinMode(directionPin_M1, OUTPUT);
   pinMode(directionPin_M2, OUTPUT);
 
-  // Initialisation des broches du capteur ultrason
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-
-  // Initialisation de la broche du servo moteur
-  myServo.attach(servoPin);
-  myServo.write(90);
-
-  Serial.begin(9600);
-}
-
-long readUltrasonicDistance() {
-  // Mesurer la distance avec le capteur ultrason
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  duration = pulseIn(echoPin, HIGH);
-  return duration * 0.034 / 2;
+  carStop();
 }
 
 void loop() {
-
-  // Lire la distance en face
-  myServo.write(90);
-  delay(500);
-  distance = readUltrasonicDistance();
-  
-  // Vérifier la distance mesurée et ajuster les mouvements du robot en conséquence
-  if (distance > 20) { // Si la distance est supérieure à 20 cm, avancer
-    carAdvance(100, 100);
-  } else { // Sinon, stop 
-    carStop();
-    delay(500); // Attendre un court instant pour tourner
-
-    // Lire la distance à gauche
-    myServo.write(0);
-    delay(500);
-    int distanceLeft = readUltrasonicDistance();
-
-     // Lire la distance à droite
-    myServo.write(180);
-    delay(500);
-    int distanceRight = readUltrasonicDistance();
-
-    // Ramener le servo en position centrale
-    myServo.write(90);
-    delay(500);
-
-    if (distanceLeft > 20) {
-      carTurnLeft(100, 100);
-      delay(500); // Attendre un court instant pour tourner
-    } else if (distanceRight > 20) {
-      carTurnRight(100, 100);
-      delay(500); // Attendre un court instant pour tourner
+  if (millis() - time >= 20) {
+    time = millis();
+    if (up) {
+      if (pos >= 0 && pos <= 179) {
+        pos += 1;
+        myservo.write(pos);
+      }
+      if (pos > 179) up = false;
     } else {
-      // Si aucune direction n'est libre, faire demi-tour
-      carTurnRight(100, 100);
-      delay(1000); // Attendre plus longtemps pour faire un demi-tour
+      if (pos >= 1 && pos <= 180) {
+        pos -= 1;
+        myservo.write(pos);
+      }
+      if (pos < 1) up = true;
     }
   }
-  delay(100);
+
+  if (millis() - urmTimer > 50) {
+    urmTimer = millis();
+    PWM_Mode();
+    navigateMaze();
+  }
+}
+
+void PWM_Mode_Setup() {
+  pinMode(URTRIG, OUTPUT);
+  digitalWrite(URTRIG, HIGH);
+  pinMode(URPWM, INPUT);
+
+  for (int i = 0; i < 4; i++) {
+    Serial.write(EnPwmCmd[i]);
+  }
+}
+
+void PWM_Mode() {
+  digitalWrite(URTRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(URTRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(URTRIG, LOW);
+
+  unsigned long DistanceMeasured = pulseIn(URPWM, LOW);
+
+  if (DistanceMeasured == 50000) {
+    Serial.print("Invalid");
+  } else {
+    Distance = DistanceMeasured / 50;
+  }
+  Serial.print("Distance=");
+  Serial.print(Distance);
+  Serial.println("cm");
 }
 
 void carStop() {
-  // Arrêter les moteurs
-  analogWrite(speedPin_M1, 0);
-  analogWrite(speedPin_M2, 0);
+  digitalWrite(speedPin_M2, 0);
+  digitalWrite(directionPin_M1, LOW);
+  digitalWrite(speedPin_M1, 0);
+  digitalWrite(directionPin_M2, LOW);
 }
 
-
 void carBack(int leftSpeed, int rightSpeed) {
-  // Reculer
   analogWrite(speedPin_M2, leftSpeed);
   digitalWrite(directionPin_M1, HIGH);
   analogWrite(speedPin_M1, rightSpeed);
@@ -109,7 +99,6 @@ void carBack(int leftSpeed, int rightSpeed) {
 }
 
 void carAdvance(int leftSpeed, int rightSpeed) {
-  // Avancer
   analogWrite(speedPin_M2, leftSpeed);
   digitalWrite(directionPin_M1, LOW);
   analogWrite(speedPin_M1, rightSpeed);
@@ -117,7 +106,6 @@ void carAdvance(int leftSpeed, int rightSpeed) {
 }
 
 void carTurnLeft(int leftSpeed, int rightSpeed) {
-  // Tourner à gauche
   analogWrite(speedPin_M2, leftSpeed);
   digitalWrite(directionPin_M1, LOW);
   analogWrite(speedPin_M1, rightSpeed);
@@ -125,9 +113,21 @@ void carTurnLeft(int leftSpeed, int rightSpeed) {
 }
 
 void carTurnRight(int leftSpeed, int rightSpeed) {
-  // Tourner à droite
   analogWrite(speedPin_M2, leftSpeed);
   digitalWrite(directionPin_M1, HIGH);
   analogWrite(speedPin_M1, rightSpeed);
   digitalWrite(directionPin_M2, LOW);
+}
+
+void navigateMaze() {
+  if (Distance < 10) { // If obstacle is detected within 10 cm
+    carStop();
+    delay(500);
+    carBack(100, 100); // Move backward
+    delay(500);
+    carTurnRight(150, 150); // Turn right
+    delay(500);
+  } else {
+    carAdvance(100, 100); // Move forward
+  }
 }
