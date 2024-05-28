@@ -18,15 +18,6 @@
                 <li>Carte Arduino</li>
             </ul>
         </section>
-        <section>
-            <h2>Démonstration</h2>
-            <ul>
-                <video width="640" height="360" controls>
-                <source src="Image/robot.mp4" type="video/mp4">
-                </video>
-                <p>Cette vidéo montre une simulation 3D d'un robot Cherokee naviguant dans un labyrinthe.</p>
-            </ul>
-        </section>
          <section>
             <h2>Datasheet</h2>
             <ul>
